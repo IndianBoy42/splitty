@@ -210,7 +210,7 @@ Actions.prototype.update = function(elapsed, set_split_time)
 		if(set_split_time)
 		{
 			var el = $($("#timer-splits tr")[window.current_run.current_split].querySelector(".time"));
-			$($("#timer-splits tr")[window.current_run.current_split].querySelector(".ref")).html(msec_to_string(window.current_run.elapsed, true, 0));
+			$($("#timer-splits tr")[window.current_run.current_split].querySelector(".ref")).html(msec_to_string(window.current_run.elapsed, true, 3));
 			
 			var difference = window.current_run.split_times[window.current_run.current_split] - window.current_timer.splits[window.current_run.current_split].pb_duration;
 			
