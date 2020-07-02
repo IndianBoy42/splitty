@@ -89,7 +89,9 @@ function msec_to_string(time, use_markup, res, relative_time)
     {
         // Pad the ms number to reflect the significative numbers shown
         var ms_length = human_time.ms.toString(10).length;
-        var shown_ms = "0".repeat(res - ms_length) + human_time.ms.toString(10);
+        var shown_ms = human_time.ms.toString(10);
+        if (ms_length < res)
+            var shown_ms = "0".repeat(res - ms_length) + shown_ms;
         
         if(use_markup)
             str += human_time.sec + ".<small>" + shown_ms + "</small>";

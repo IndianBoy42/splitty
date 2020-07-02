@@ -198,6 +198,20 @@ Actions.prototype.update = function(elapsed, set_split_time)
 		if(window.current_timer.splits[window.current_run.current_split].pb_split)
 			rel_split = window.current_run.elapsed - window.current_timer.splits[window.current_run.current_split].pb_split;
 		
+		var split_time = window.current_run.split_times[window.current_run.current_split];
+		if(window.current_run.current_split > 0)
+			split_time -= window.current_run.split_times[window.current_run.current_split - 1];
+
+		$($("#timer-splits tr")[window.current_run.current_split].querySelector(".diff")).html(msec_to_string(split_time, true, 2));
+		
+		var rel_diff = null;
+		if(window.current_timer.splits[window.current_run.current_split].pb_duration)
+			rel_diff = split_time - window.current_timer.splits[window.current_run.current_split].pb_duration;
+		if(rel_diff && (rel_diff > 0 || set_split_time))
+		{	
+			$($("#timer-splits tr")[window.current_run.current_split].querySelector(".rel_diff")).html(msec_to_string(rel_diff, true, 1, true));
+		}
+
 		final_time = !window.current_run.started; // Are we showing the final time or not
 		$("#global-time").html(window.current_run.get_time(true, final_time));
 	
@@ -210,17 +224,12 @@ Actions.prototype.update = function(elapsed, set_split_time)
 		if(set_split_time)
 		{
 			var el = $($("#timer-splits tr")[window.current_run.current_split].querySelector(".time"));
-			$($("#timer-splits tr")[window.current_run.current_split].querySelector(".ref")).html(msec_to_string(window.current_run.elapsed, true, 3));
+			$($("#timer-splits tr")[window.current_run.current_split].querySelector(".ref")).html(msec_to_string(window.current_run.elapsed, true, 2));
 			
 			var difference = window.current_run.split_times[window.current_run.current_split] - window.current_timer.splits[window.current_run.current_split].pb_duration;
 			
 			if(window.current_run.current_split > 0)
-				difference -= window.current_run.split_times[window.current_run.current_split - 1];
-			
-			
-			var split_time = window.current_run.split_times[window.current_run.current_split];
-			if(window.current_run.current_split > 0)
-				split_time -= window.current_run.split_times[window.current_run.current_split - 1];
+			difference -= window.current_run.split_times[window.current_run.current_split - 1];
 			
 			var classes = "";
 			
@@ -314,23 +323,38 @@ Actions.prototype.load_timer = function(timer)
 		var new_line = document.createElement("tr");
 		var new_cell_name = document.createElement("td");
 		var new_cell_time = document.createElement("td");
+		var new_cell_diff = document.createElement("td");
 		var new_cell_ref = document.createElement("td");
+		var new_cell_rel_diff = document.createElement("td");
 
 		new_cell_name.innerHTML = timer.splits[i].name;
 		new_cell_time.classList.add("time");
 		new_cell_ref.classList.add("ref");
+		new_cell_diff.classList.add("diff");
+		new_cell_rel_diff.classList.add("rel_diff");
 		
 		if(timer.splits[i].pb_split)
 		{
-			var htime = msec_to_string(timer.splits[i].pb_split, false, 0);
+			var htime = msec_to_string(timer.splits[i].pb_split, false, 2);
 			new_cell_ref.innerHTML = htime;
 		}
 		else
 			new_cell_ref.innerHTML = "-";
+		
+			
+		if(timer.splits[i].pb_duration)
+		{
+			var htime = msec_to_string(timer.splits[i].pb_duration, false, 2);
+			new_cell_diff.innerHTML = htime;
+		}
+		else
+			new_cell_diff.innerHTML = "-";
 
 		new_line.appendChild(new_cell_name);
 		new_line.appendChild(new_cell_time);
+		new_line.appendChild(new_cell_rel_diff);
 		new_line.appendChild(new_cell_ref);
+		new_line.appendChild(new_cell_diff);
 		
 		$("#timer-splits").append($(new_line));
 		
