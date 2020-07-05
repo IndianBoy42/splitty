@@ -913,7 +913,12 @@ Actions.prototype.timer_stop_reset = function()
 Actions.prototype.timer_save_splits = function()
 {
 	window.current_timer.save_bests(window.current_run); // Save best splits
-	window.current_timer.save_splits(window.current_run);
+	var l = window.current_timer.splits.length;
+	if (window.current_run.split_times[l-1] != null && window.current_run.split_times[l-1] < window.current_timer.splits[l-1].pb_split) {
+		if (confirm("This seems to be a PB, ill save the splits, ok?"))
+			window.current_timer.save_splits(window.current_run);
+	} else if (confirm("This is not a PB, really save the times? (best splits already saved)"))
+		window.current_timer.save_splits(window.current_run);
 	Crouton.notify(CroutonType.CONFIRM, "Splits saved.");
 }
 
