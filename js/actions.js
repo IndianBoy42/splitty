@@ -317,6 +317,8 @@ Actions.prototype.load_timer = function(timer)
 	//Setting global time
 	$("#global-time").html(msec_to_string(-1 * timer.start_delay, true, 1));
 	
+	var sob_accum = 0;
+
 	$("#timer-splits tr").remove();
 	for(var i in timer.splits)
 	{
@@ -342,19 +344,25 @@ Actions.prototype.load_timer = function(timer)
 			new_cell_ref.innerHTML = "-";
 		
 			
-		if(timer.splits[i].pb_duration)
+		if(timer.splits[i].split_best)
 		{
-			var htime = msec_to_string(timer.splits[i].pb_duration, false, 2);
-			new_cell_diff.innerHTML = htime;
+			// var htime = msec_to_string(timer.splits[i].split_best, false, 2);
+			// new_cell_diff.innerHTML = htime;
+			var split = timer.splits[i].split_best;
+			sob_accum += split;
+			new_cell_diff.innerHTML = msec_to_string(sob_accum, false, 2);
+			new_cell_rel_diff.innerHTML = msec_to_string(split, false, 2);
 		}
-		else
+		else {
 			new_cell_diff.innerHTML = "-";
+			new_cell_rel_diff.innerHTML = "-";
+		}
 
 		new_line.appendChild(new_cell_name);
 		new_line.appendChild(new_cell_time);
-		new_line.appendChild(new_cell_rel_diff);
 		new_line.appendChild(new_cell_ref);
 		new_line.appendChild(new_cell_diff);
+		new_line.appendChild(new_cell_rel_diff);
 		
 		$("#timer-splits").append($(new_line));
 		

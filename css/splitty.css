@@ -185,6 +185,11 @@
     {
         border-right: 10px solid transparent;
     }
+    
+    #timer-splits tr td.diff
+    {
+        border-right: 10px solid transparent;
+    }
 
     .time.ahead.split-ahead { color: #15BC33; }
     .time.ahead.split-late { color: #AEE711; }
